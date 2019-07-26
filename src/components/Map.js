@@ -70,8 +70,8 @@ export default class Map extends Component {
                     "data": this.state.data
                 },
                 'paint': {
-                    "circle-radius": 5,
-                    "circle-color": "#B4D455"
+                    "circle-radius": 6,
+                    "circle-color": '#A93226'
                 }
             });
         });
@@ -94,6 +94,14 @@ export default class Map extends Component {
             `)
             .addTo(map);
         });
+
+        map.on('mouseenter', 'points', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        })
+
+        map.on('mouseleave', 'points', () => {
+            map.getCanvas().style.cursor = '';
+        })
 
         this.setState({ map });
     }
