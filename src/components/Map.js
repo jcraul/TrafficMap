@@ -43,9 +43,9 @@ export default class Map extends Component {
             onViewportChange={(viewport) => this.setState({viewport})}>
                 {data && data.map((coord,i) => (
                     <Marker 
-                    key={`Marker-${i * (Math.random() * 200 + 1)}`} 
-                    latitude={coord.location.latitude} 
-                    longitude={coord.location.longitude}>
+                    key={i} 
+                    latitude={Number(coord.location.latitude)}
+                    longitude={Number(coord.location.longitude)}>
                         <Pin/>
                     </Marker>
                 ))}
