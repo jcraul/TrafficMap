@@ -34,9 +34,9 @@ export default class Map extends Component {
                 "type": "Feature",
                 "geometry": {
                     "type": "Point",
-                    "coordinate": [
+                    "coordinates": [
                         parseFloat(point.location.longitude),
-                        parseFloat(point.location.latitude),
+                        parseFloat(point.location.latitude)
                     ]
                 },
                 "properties": {
@@ -61,7 +61,6 @@ export default class Map extends Component {
             style: 'mapbox://styles/mapbox/light-v9',
             ... this.state.viewport,
         });
-
         map.on('load', () => {
             map.addLayer({
                 'id': 'points',
@@ -79,8 +78,23 @@ export default class Map extends Component {
 
         map.on('click', 'points', (e) => {
             const coordinates = e.features[0].geometry.coordinates.slice();
-            const {details. description impact, duration}
-        })
+            const {details, description, impact, duration} = e.features[0].properties;
+
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            new MapboxGL.Popup()
+            .setLngLat(coordinates)
+            .setHTML(`
+                <strong>${description}</strong><br />
+                <em>${impact}</em><br />
+                <em>${duration}</em><br />
+                <p>${details}</p>
+            `)
+            .addTo(map);
+        });
+
         this.setState({ map });
     }
 
