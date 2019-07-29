@@ -1,68 +1,17 @@
-import React, {Component} from 'react';
-import {Container} from 'reactstrap';
-import './App.css';
-import Header from './components/Header'
-import Map from './components/Map';
+import {connect} from 'react-redux';
+import Home from './Home';
+import { fetchFromAPI } from './store/actions/api_actions';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      applicationName:'TrafficMap',
-      date:null,
-      api_url: 'https://data.edmonton.ca/resource/87ck-293k.json',
-    }
-  }
-
-  componentDidMount() {
-    const { data, api_url } = this.state;
-
-    if (!data) {
-        fetch(api_url, { method: 'GET' })
-            .then(response => response.json())
-            .then(response => this.createFeatureCollect(response))
-            .then(response => this.setState({ data: response }));
-    }
-  }
-
-  createFeatureCollect(data) {
-    let features = [];
-    data.forEach(point => {
-        features.push({
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [
-                    parseFloat(point.location.longitude),
-                    parseFloat(point.location.latitude)
-                ]
-            },
-            "properties": {
-                "description": point.description,
-                "details": point.details,
-                "duration": point.duration,
-                "impact": point.impact
-            }
-        });
-    });
-
+const mapStateToProps = state => {
     return {
-        "type": "FeatureCollection",
-        "features": features
+        API: state.APIReducer
     }
-  }
+};
 
-  render() {
-      return (
-        <div className='App'>
-          <Header appName={this.state.applicationName} />
-          <Container>
-            <Map data={this.state.data} />
-          </Container>
-        </div>
-      );
-  }
-
+const mapDispatchToProps = dispatch => {
+    return {
+        startFetch: () => dispatch(fetchFromAPI())
+    }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
